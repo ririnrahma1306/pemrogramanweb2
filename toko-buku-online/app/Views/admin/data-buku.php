@@ -6,6 +6,22 @@
   <br>
   <h1>Data Buku</h1>
   <!-- Topbar -->
+   <?php if(session('sukses')):?>
+    <div class="mb-3">
+      <div class="alert alert-success">
+        <strong>Sukses</strong> <?= session('sukses') ?>
+      </div>
+    </div>
+    <?php endif?>
+
+    <?php if(session('gagal')):?>
+    <div class="mb-3">
+      <div class="alert alert-success">
+        <strong>Gagal</strong> <?= session('gagal') ?>
+      </div>
+    </div>
+    <?php endif?>
+
 
   <!-- Sidebar Toggle (Topbar) -->
   <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -46,42 +62,25 @@
     <tbody>
 
       <!-- Data Dummy -->
+       <?php foreach($books as $buku):?>
       <tr>
-        <td>1</td>
-        <td>Menjadi Mastering Mewing</td>
-        <td>Sigma</td>
-        <td>Gramedia</td>
-        <td>2023</td>
-        <td>https://google.com/1.jpg</td>
+        <td><?= $buku['id']; ?></td>
+        <td><?= $buku['judul']; ?></td>
+        <td><?= $buku['pengarang']; ?></td>
+        <td><?= $buku['penerbit']; ?></td>
+        <td><?= $buku['tahun']; ?></td>
         <td>
-          <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-id="1"><i class="bi bi-pencil-square"></i> Edit</button>
-          <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapusModal" data-bs-id="1"><i class="bi bi-trash"></i> Hapus</button>
+          <img src="<?= base_url($buku['thumbnail_url'])?>" alt="<?= $buku['judul']?>"
+          class="img-thumbnail" style="width: 150px; height: auto">
+        </td>
+        <td>
+          <a href="<?=base_url('admin/data-buku/' . $buku['id'] . '/edit')?>"
+          class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i> Edit</a>
+          
+          <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapusModal" data-bs-id="<?= $buku['id']; ?> "><i class="bi bi-trash"></i> Hapus</button>
         </td>
       </tr>
-      <tr>
-        <td>2</td>
-        <td>Aku Dan Dia</td>
-        <td>Asep</td>
-        <td>Gramedia</td>
-        <td>2020</td>
-        <td>https://google.com/2.jpg</td>
-        <td>
-          <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-id="2"><i class="bi bi-pencil-square"></i> Edit</button>
-          <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapusModal" data-bs-id="2"><i class="bi bi-trash"></i> Hapus</button>
-        </td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>Cinta Itu Luka</td>
-        <td>Eka Kurniawan</td>
-        <td>Gramedia</td>
-        <td>2018</td>
-        <td>https://google.com/3.jpg</td>
-        <td>
-          <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-id="2"><i class="bi bi-pencil-square"></i> Edit</button>
-          <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapusModal" data-bs-id="2"><i class="bi bi-trash"></i> Hapus</button>
-        </td>
-      </tr>
+      <?php endforeach;?>      
     </tbody>
   </table>
 </div>
@@ -96,7 +95,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="/databuku.php/simpan" method="POST" id="formTambah">
+        <form action="<?= base_url('admin/data-buku') ?>" method="POST"enctype="multipart/form-data" id="formTambah">
           <div class="mb-3">
             <label for="judul">Judul</label>
             <input type="text" name="judul" id="judul" class="form-control">
@@ -114,8 +113,9 @@
             <input type="text" name="tahun" id="tahun" class="form-control">
           </div>
           <div class="mb-3">
-            <label for="tahun">Thumbnail URL</label>
-            <input type="url" name="thumbnail_url" id="thumbnail_url" class="form-control" placeholder="https:/example.com/image.jpg">
+            <label for="tahun">Cover</label>
+            <input type="file" accept="image/*" name="thumbnail_url" id="thumbnail_url" 
+            class="form-control">
           </div>
         </form>
       </div>
